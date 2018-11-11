@@ -34,9 +34,8 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="sceneVIew" destination="YTH-M8-m97" id="67U-v2-87e"/>
-                        <outlet property="textOutput" destination="0Gp-uF-MrC" id="qWS-zL-RlQ"/>
-                        <outlet property="textView" destination="0Gp-uF-MrC" id="Wcw-Ti-UTP"/>
+                        <outlet property="sceneView" destination="YTH-M8-m97" id="kbD-0Q-wde"/>
+                        <outlet property="textView" destination="0Gp-uF-MrC" id="UXD-kA-3aA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

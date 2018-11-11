@@ -81,15 +81,43 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         guard let selectedModel = try? VNCoreMLModel(for: Recognizer().model) else {
             fatalError("Could not load model. Ensure model has been drag and dropped (copied) to XCode Project from the GitHub.")
         }
-        let dectectionRequest = VNCoreMLRequest(model: selectedModel, completionHandler: objectCompleteHandler)
+        let dectectionRequest = VNCoreMLRequest(model: selectedModel, completionHandler: {(request, error) in
+            DispatchQueue.main.async(execute: {
+                if let results = request.results{
+                    self.processHands(results)
+                }
+            })
+        })
         
         visionRequests = [dectectionRequest]
         
     }
     
-    func objectCompleteHandler(request: VNRequest, error: Error?){
-        
+    func processHands(_ results: [Any]){
+        var cards = [Any]()
+        var nums = [Any]()
+        for observation in results where observation is VNRecognizedObjectObservation {
+            guard let objectObservation = observation as? VNRecognizedObjectObservation else {
+                continue
+            }
+            // Select only the label with the highest confidence.
+            let topLabelObservation = objectObservation.labels[0]
+            let instance = topLabelObservation.identifier
+            if ((instance == "Club") || (instance == "Heart") || (instance == "Diamond") || (instance == "Spade")){
+                cards.append(instance)
+            }
+            else{
+                nums.append(instance)
+            }
+        }
+        if (cards.count != 5){
+            self.textView.text = "Not enough Cards!"
+        }
+        else{
+            self.textView.text = "Enough Cards!"
+        }
     }
+    
     
     func coreMLLoop(){
         dispatchQueueML.async {

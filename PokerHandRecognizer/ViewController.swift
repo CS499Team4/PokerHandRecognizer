@@ -34,7 +34,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         sceneView.delegate = self
         
         // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
+        sceneView.showsStatistics = false
         
         // Create a new scene
         let scene = SCNScene()
@@ -94,28 +94,49 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func processHands(_ results: [Any]){
-        var cards = [Any]()
-        var nums = [Any]()
+        self.textView.text = ""
+        var cards = [String]()
+        var cardsLocation = [CGRect]()
+        var nums = [String]()
+        var numsLocation = [CGRect]()
         for observation in results where observation is VNRecognizedObjectObservation {
             guard let objectObservation = observation as? VNRecognizedObjectObservation else {
                 continue
             }
             // Select only the label with the highest confidence.
             let topLabelObservation = objectObservation.labels[0]
+            let location = objectObservation.boundingBox
             let instance = topLabelObservation.identifier
             if ((instance == "Club") || (instance == "Heart") || (instance == "Diamond") || (instance == "Spade")){
                 cards.append(instance)
+                cardsLocation.append(location)
             }
             else{
                 nums.append(instance)
+                numsLocation.append(location)
+            }
+            
+        }
+        var pairs = [String]()
+        for c in 0..<cardsLocation.count{
+            for n in 0..<numsLocation.count{
+                if cardsLocation[c].contains(numsLocation[n]){
+                    let id = cards[c] + " " + nums[n]
+                    if !(pairs.contains(id)){
+                        pairs.append(id)
+                        self.textView.text.append(id + "\n")
+                    }
+                }
             }
         }
-        if (cards.count != 5){
+        print(pairs) // only is able to recognize one card at a time
+        
+        /*if (cards.count != 5){
             self.textView.text = "Not enough Cards!"
         }
         else{
             self.textView.text = "Enough Cards!"
-        }
+        }*/
     }
     
     

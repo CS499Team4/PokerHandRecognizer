@@ -23,7 +23,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </arscnView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Gp-uF-MrC">
-                                <rect key="frame" x="0.0" y="588" width="375" height="224"/>
+                                <rect key="frame" x="0.0" y="569" width="375" height="243"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="0.51337756850000005" colorSpace="calibratedRGB"/>
                                 <color key="tintColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="0.90097923801369861" colorSpace="calibratedRGB"/>

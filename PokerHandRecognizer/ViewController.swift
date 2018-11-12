@@ -306,9 +306,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         else{
             let max = newNum.max()
+            let vals = ["Two", "Three", "Four", "Five", "Six","Seven","Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"]
             let indexOfMax = newNum.firstIndex(of: max!)
-            print("High Card of" + String(max!) + " " + suit[indexOfMax!])
-            self.sceneText[8] = "High Card of" + String(max!) + " " + suit[indexOfMax!]
+            print("High Card of " + vals[max!] + " " + suit[indexOfMax!])
+            self.sceneText[8] = "High Card of " + vals[max!] + " " + suit[indexOfMax!]
         }
         
         self.updateText()
@@ -405,7 +406,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         else if numsCopy[1] == numsCopy[2] && numsCopy[2] == numsCopy[3]{
             return true
         }
-        else if numsCopy[2] == numsCopy[3] && numsCopy[4] == numsCopy[5]{
+        else if numsCopy[2] == numsCopy[3] && numsCopy[3] == numsCopy[4]{
             return true
         }
         return false

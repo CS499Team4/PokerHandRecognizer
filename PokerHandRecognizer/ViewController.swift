@@ -15,6 +15,7 @@ import Vision
 
 class ViewController: UIViewController, ARSCNViewDelegate {
 
+    @IBOutlet weak var toolbar: UIToolbar!
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var textView: UITextView!
     // COREML
@@ -23,11 +24,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var cardsRecognized = [String]()
     var currPair = ""
+    var sceneText = ["Currently predicting this card as:", "", "", "", "", "", "", ""]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
+        self.textView.text = sceneText[0]
         self.setUpARKit()
         self.setUpVision()
         self.coreMLLoop()
@@ -127,12 +130,39 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 if cardsLocation[c].contains(numsLocation[n]){
                     let id = cards[c] + " " + nums[n]
                     self.currPair = id
-                    self.textView.text.append(id)
+                }
+            }
+        }
+        
+        self.sceneText[1] = self.currPair
+        self.updateText()
+    }
+    
+    
+    func updateText(){
+        self.textView.text = ""
+        var skip1 = false
+        if self.sceneText[1] == ""{
+            skip1 = true
+        }
+        for i in self.sceneText{
+            if i != ""{
+                if i == self.sceneText[0] && !skip1{
+                    self.textView.text.append(i)
+                    self.textView.text.append("\n")
+                }
+                else if i != self.sceneText[0]{
+                    self.textView.text.append(i)
+                    self.textView.text.append("\n")
+                }
+                else{
+                    if self.cardsRecognized.count != 5{
+                        self.textView.text.append("Place card in front to classify\n")
+                    }
                 }
             }
         }
     }
-    
     
     func coreMLLoop(){
         dispatchQueueML.async {
@@ -162,16 +192,32 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
-        if self.currPair != ""{
+        if self.currPair != "" && self.cardsRecognized.count != 5{
             self.cardsRecognized.append(self.currPair)
+            self.sceneText[self.cardsRecognized.count+2] = "Card " + String(self.cardsRecognized.count) + ": " + self.currPair
+            self.updateText()
             print(self.cardsRecognized)
         }
         if self.cardsRecognized.count == 5{
-            self.classify()
+            print("TEST")
         }
     }
     
-    func classify(){
+    @IBAction func reset(_ sender: Any) {
+        self.cardsRecognized = [String]()
+        self.sceneText = ["Currently predicting this card as:", "", "", "", "", "", "", ""]
+        self.updateText()
+    }
+    
+    @IBAction func popLast(_ sender: UIBarButtonItem) {
+        if self.cardsRecognized.count != 0{
+            self.sceneText[self.cardsRecognized.count + 2] = ""
+            self.cardsRecognized.removeLast()
+            self.updateText()
+        }
+    }
+    
+    /*func classify(){
         let cardorder = ["Two", "Three", "Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"]
         var sorted = [String]()
         for i in self.cardsRecognized{
@@ -202,6 +248,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
 
     }
-    
+    */
 }
 

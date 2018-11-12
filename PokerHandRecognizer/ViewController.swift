@@ -17,13 +17,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var textView: UITextView!
-    
     // COREML
     var visionRequests = [VNRequest]()
     let dispatchQueueML = DispatchQueue(label: "com.hw.dispatchqueueml") // A Serial Queue
     
+    var cardsRecognized = [String]()
+    var currPair = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
+        view.addGestureRecognizer(tapGesture)
         self.setUpARKit()
         self.setUpVision()
         self.coreMLLoop()
@@ -117,26 +121,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
             
         }
-        var pairs = [String]()
+        self.currPair = ""
         for c in 0..<cardsLocation.count{
             for n in 0..<numsLocation.count{
                 if cardsLocation[c].contains(numsLocation[n]){
                     let id = cards[c] + " " + nums[n]
-                    if !(pairs.contains(id)){
-                        pairs.append(id)
-                        self.textView.text.append(id + "\n")
-                    }
+                    self.currPair = id
+                    self.textView.text.append(id)
                 }
             }
         }
-        print(pairs) // only is able to recognize one card at a time
-        
-        /*if (cards.count != 5){
-            self.textView.text = "Not enough Cards!"
-        }
-        else{
-            self.textView.text = "Enough Cards!"
-        }*/
     }
     
     
@@ -148,8 +142,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // 2. Loop this function.
             self.coreMLLoop()
         }
-
     }
+    
+    
     
     func updateCoreML(){
         let pixbuff : CVPixelBuffer? = (sceneView.session.currentFrame?.capturedImage)
@@ -163,6 +158,49 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             print(error)
         }
         
+    }
+    
+    
+    @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
+        if self.currPair != ""{
+            self.cardsRecognized.append(self.currPair)
+            print(self.cardsRecognized)
+        }
+        if self.cardsRecognized.count == 5{
+            self.classify()
+        }
+    }
+    
+    func classify(){
+        let cardorder = ["Two", "Three", "Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King","Ace"]
+        var sorted = [String]()
+        for i in self.cardsRecognized{
+            if sorted.count == 0{
+                sorted.append(i)
+            }
+            else{
+                let splitted = i.split(separator: " ")
+                let indexOfI = cardorder.firstIndex(of: String(splitted[1]))
+                var indexI = indexOfI?.distance(to: 0)
+                indexI = indexI! * -1
+                let currSplit = sorted[0].split(separator: " ")
+                let indexOfJ = cardorder.firstIndex(of: String(currSplit[1]))
+                var indexJ = indexOfJ?.distance(to: 0)
+                indexJ = indexJ! * -1
+                var appendHere = 0
+                while indexI! < indexJ!{
+                    appendHere += 1
+                    let currSplit = sorted[appendHere].split(separator: " ")
+                    let indexOfJ = cardorder.firstIndex(of: String(currSplit[1]))
+                    var indexJ = indexOfJ?.distance(to: 0)
+                    indexJ = indexJ! * -1
+                }
+                sorted.insert(i, at: appendHere)
+            
+                
+            }
+        }
+
     }
     
 }

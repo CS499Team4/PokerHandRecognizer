@@ -192,14 +192,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
-        if self.currPair != "" && self.cardsRecognized.count != 5 && !self.cardsRecognized.contains(self.currPair){
+        print("TAP")
+        if self.currPair != "" && self.cardsRecognized.count != 4 && !self.cardsRecognized.contains(self.currPair){
             self.cardsRecognized.append(self.currPair)
             self.sceneText[self.cardsRecognized.count+2] = "Card " + String(self.cardsRecognized.count) + ": " + self.currPair
             self.updateText()
             print(self.cardsRecognized)
         }
-        if self.cardsRecognized.count == 5{
-            self.classify()
+        if self.cardsRecognized.count == 4{
+            self.trick_winner(array: trump_suit, array2: cardsRecognized)
         }
     }
     
@@ -216,229 +217,332 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             self.updateText()
         }
     }
+    var trump_suit = [String]()
+    @IBAction func showPopup(_ sender: AnyObject) {
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "sbPopUpID") as! ViewController
+        self.addChild(popOverVC)
+        popOverVC.view.frame = self.view.frame
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParent: self)
+    }
     
-    func classify(){
-        var suit = [String]()
-        var num = [String]()
-        for i in self.cardsRecognized{
-            let split = i.split(separator: " ")
-            suit.append(String(split[0]))
-            num.append(String(split[1]))
-        }
-        var newNum = [Int]()
-        for i in num{
-            switch i {
-            case "Two":
-                newNum.append(0)
-                break
-            case "Three":
-                newNum.append(1)
-                break
-            case "Four":
-                newNum.append(2)
-                break
-            case "Five":
-                newNum.append(3)
-                break
-            case "Six":
-                newNum.append(4)
-                break
-            case "Seven":
-                newNum.append(5)
-                break
-            case "Eight":
-                newNum.append(6)
-                break
-            case "Nine":
-                newNum.append(7)
-                break
-            case "Ten":
-                newNum.append(8)
-                break
-            case "Jack":
-                newNum.append(9)
-                break
-            case "Queen":
-                newNum.append(10)
-                break
-            case "King":
-                newNum.append(11)
-                break
-            default: //Ace
-                newNum.append(12)
-            }
-        }
-        if isRoyalFlush(suits: suit, nums: newNum){
-            print("Royal Flush")
-            self.sceneText[8] = "Royal Flush"
-        }
-        else if isStraightFlush(suits: suit, nums: newNum){
-            print("Straight Flush")
-            self.sceneText[8] = "Straight Flush"
-        }
-        else if isFourOfAKind(nums: newNum){
-            print("Four of a kind")
-            self.sceneText[8] = "Four of a Kind"
-        }
-        else if isFullHouse(nums: newNum){
-            print("Full House")
-            self.sceneText[8] = "Full House"
-        }
-        else if isFlush(suits: suit){
-            print("Flush")
-            self.sceneText[8] = "Flush"
-        }
-        else if isStraight(nums: newNum){
-            print("Straight")
-            self.sceneText[8] = "Straight"
-        }
-        else if isThreeOfAKind(nums: newNum){
-            print("Three of a Kind")
-            self.sceneText[8] = "Three of A Kind"
-        }
-        else if isTwoPair(nums: newNum){
-            print("Two Pair")
-            self.sceneText[8] = "Two Pair"
-        }
-        else if isPair(nums: newNum){
-            print("Pair")
-            self.sceneText[8] = "Pair"
-        }
-        else{
-            let max = newNum.max()
-            let vals = ["Two", "Three", "Four", "Five", "Six","Seven","Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"]
-            let indexOfMax = newNum.firstIndex(of: max!)
-            print("High Card of " + vals[max!] + " " + suit[indexOfMax!])
-            self.sceneText[8] = "High Card of " + vals[max!] + " " + suit[indexOfMax!]
-        }
+    @IBAction func choice1(_ sender: UIButton){
+        trump_suit = ["diamonds", "hearts"]
+        self.view.removeFromSuperview()
         
-        self.updateText()
     }
     
-    func isRoyalFlush(suits: [String], nums: [Int])->Bool{
-        let mainSuit = suits[0]
-        for i in suits{
-            if i != mainSuit{
-                return false
-            }
-        }
-        let neededForFlush = [12,11,10,9,8]
-        for i in neededForFlush{
-            if !nums.contains(i){
-                return false
-            }
-        }
-        return true
+    @IBAction func choice2(_ sender: UIButton){
+        trump_suit = ["hearts", "diamonds"]
+        self.view.removeFromSuperview()
+        
     }
     
-    func isStraightFlush(suits: [String], nums: [Int])->Bool{
-        let mainSuit = suits[0]
-        for i in suits{
-            if i != mainSuit{
-                return false
-            }
-        }
-        var numsCopy = nums
-        numsCopy.sort()
-        for i in 0..<numsCopy.count - 1{
-            if numsCopy[i+1] - numsCopy[i] != 1{
-                return false
-            }
-        }
-        return true
+    @IBAction func choice3(_ sender: UIButton){
+        trump_suit = ["spades", "clubs"]
+        self.view.removeFromSuperview()
+        
     }
     
-    func isFourOfAKind(nums: [Int])->Bool{
-        var numsCopy = nums
-        numsCopy.sort()
-        if numsCopy[0] == numsCopy[1] && nums[1] == numsCopy[2]  && numsCopy[2] == numsCopy[3]{
-            return true
-        }
-        else if numsCopy[1] == numsCopy[2] && numsCopy[2] == numsCopy[3]  && numsCopy[3] == numsCopy[4]{
-            return true
-        }
-        return false
+    @IBAction func choice4(_ sender: UIButton) {
+        trump_suit = ["clubs", "spades"]
+        self.view.removeFromSuperview()
+        
     }
     
-    func isFullHouse(nums: [Int])->Bool{
-        var numsCopy = nums
-        numsCopy.sort()
-        if numsCopy[0] == numsCopy[1] && numsCopy[1] == numsCopy[2]{
-            if numsCopy[3] == numsCopy[4]{
-                return true
-            }
-        }
-        else if numsCopy[4] == numsCopy[3] && numsCopy[3] == numsCopy[2]{
-            if numsCopy[1] == numsCopy[0]{
-                return true
-            }
-        }
-        return false
-    }
     
-    func isFlush(suits: [String])->Bool{
-        let mainSuit = suits[0]
-        for i in suits{
-            if i != mainSuit{
-                return false
+    func trick_winner(array: [String], array2: [String]){
+        let card_rank = ["nine", "ten", "jack", "queen", "king", "ace",
+                         "trump_nine", "trump_ten", "trump_queen", "trump_king", "trump_ace",
+                         "left_bower", "right_bower"]
+        
+        
+        var cranks = [Int]()
+        // trump suit and opposite
+        let trump_suit = ["Heart", "Diamond"]
+        
+        for card in cardsRecognized{
+            let rs = card.split(separator: " ")
+            let cardindex = card_rank.firstIndex(of: String(rs[1]))
+            var cindex = 0
+            // rs[0] = suit, rs[1] = rank
+            if (rs[0] == trump_suit[0]){
+                // right Bower
+                if (rs[1] == "Jack"){
+                    cranks.append(12)
+                }
+                    //cards of trump suit
+                else if (rs[1] == "Nine" || rs[1] == "Ten"){
+                    cindex = (cardindex?.distance(to: 0))!
+                    cindex = cindex * -1 + 6
+                    //print(cindex!)
+                    cranks.append(cindex)
+                }
+                else{
+                    cindex = (cardindex?.distance(to: 0))!
+                    cindex = cindex * -1 + 5
+                    //print(cindex!)
+                    cranks.append(cindex)
+                }
             }
+                // left Bower
+            else if (rs[0] == trump_suit[1] && rs[1] == "Jack"){
+                cindex = 11
+                cranks.append(11)
+            }
+            else{
+                cindex = (cardindex?.distance(to: 0))!
+                cindex = cindex * -1
+                
+                //print(cindex!)
+                cranks.append(cindex)
+            }
+            
         }
-        return true
+        //print(cranks)
+        let windex = max(cranks[0], cranks[1], cranks[2], cranks[3])
+        //print(windex)
+        //var winner = ""
+        if (cranks[0] == windex){
+            let winner = cardsRecognized[0]
+            print("Winner of the trick is: ", winner)
+        }
+        else if (cranks[1] == windex){
+            let winner = cardsRecognized[1]
+            print("Winner winner of the trick is: ", winner)
+        }
+        else if (cranks[2] == windex){
+            let winner = cardsRecognized[2]
+            print("Winner of the trick is: ", winner)
+        }
+        else {
+            let winner = cardsRecognized[3]
+            print("Winner of the trick is: ", winner)
+        }
     }
-    
-    func isStraight(nums: [Int])->Bool{
-        var numsCopy = nums
-        numsCopy.sort()
-        for i in 0..<numsCopy.count - 1{
-            if numsCopy[i+1] - numsCopy[i] != 1{
-                return false
-            }
-        }
-        return true
-    }
-    
-    func isThreeOfAKind(nums: [Int])->Bool{
-        var numsCopy = nums
-        numsCopy.sort()
-        if numsCopy[0] == numsCopy[1] && numsCopy[1] == numsCopy[2]{
-            return true
-        }
-        else if numsCopy[1] == numsCopy[2] && numsCopy[2] == numsCopy[3]{
-            return true
-        }
-        else if numsCopy[2] == numsCopy[3] && numsCopy[3] == numsCopy[4]{
-            return true
-        }
-        return false
-    }
-    
-    func isTwoPair(nums: [Int])->Bool{
-        var numsCopy = nums
-        numsCopy.sort()
-        if numsCopy[0] ==  numsCopy[1]{
-            if numsCopy[2] == numsCopy[3]{
-                return true
-            }
-            if numsCopy[3] == numsCopy[4]{
-                return true
-            }
-        }
-        else if numsCopy[1] == numsCopy[2]{
-            if numsCopy[3] == numsCopy[3]{
-                return true
-            }
-        }
-        return false
-    }
-    
-    func isPair(nums: [Int])->Bool{
-        var numsCopy = nums
-        numsCopy.sort()
-        for i in 0..<numsCopy.count-1{
-            if numsCopy[i] == numsCopy[i+1]{
-                return true
-            }
-        }
-        return false
-    }
+    //trick_winner(array: trump_suit, array2: cards)
+//    func classify(){
+//        var suit = [String]()
+//        var num = [String]()
+//        for i in self.cardsRecognized{
+//            let split = i.split(separator: " ")
+//            suit.append(String(split[0]))
+//            num.append(String(split[1]))
+//        }
+//        var newNum = [Int]()
+//        for i in num{
+//            switch i {
+//            case "Two":
+//                newNum.append(0)
+//                break
+//            case "Three":
+//                newNum.append(1)
+//                break
+//            case "Four":
+//                newNum.append(2)
+//                break
+//            case "Five":
+//                newNum.append(3)
+//                break
+//            case "Six":
+//                newNum.append(4)
+//                break
+//            case "Seven":
+//                newNum.append(5)
+//                break
+//            case "Eight":
+//                newNum.append(6)
+//                break
+//            case "Nine":
+//                newNum.append(7)
+//                break
+//            case "Ten":
+//                newNum.append(8)
+//                break
+//            case "Jack":
+//                newNum.append(9)
+//                break
+//            case "Queen":
+//                newNum.append(10)
+//                break
+//            case "King":
+//                newNum.append(11)
+//                break
+//            default: //Ace
+//                newNum.append(12)
+//            }
+//        }
+//        if isRoyalFlush(suits: suit, nums: newNum){
+//            print("Royal Flush")
+//            self.sceneText[8] = "Royal Flush"
+//        }
+//        else if isStraightFlush(suits: suit, nums: newNum){
+//            print("Straight Flush")
+//            self.sceneText[8] = "Straight Flush"
+//        }
+//        else if isFourOfAKind(nums: newNum){
+//            print("Four of a kind")
+//            self.sceneText[8] = "Four of a Kind"
+//        }
+//        else if isFullHouse(nums: newNum){
+//            print("Full House")
+//            self.sceneText[8] = "Full House"
+//        }
+//        else if isFlush(suits: suit){
+//            print("Flush")
+//            self.sceneText[8] = "Flush"
+//        }
+//        else if isStraight(nums: newNum){
+//            print("Straight")
+//            self.sceneText[8] = "Straight"
+//        }
+//        else if isThreeOfAKind(nums: newNum){
+//            print("Three of a Kind")
+//            self.sceneText[8] = "Three of A Kind"
+//        }
+//        else if isTwoPair(nums: newNum){
+//            print("Two Pair")
+//            self.sceneText[8] = "Two Pair"
+//        }
+//        else if isPair(nums: newNum){
+//            print("Pair")
+//            self.sceneText[8] = "Pair"
+//        }
+//        else{
+//            let max = newNum.max()
+//            let vals = ["Two", "Three", "Four", "Five", "Six","Seven","Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace"]
+//            let indexOfMax = newNum.firstIndex(of: max!)
+//            print("High Card of " + vals[max!] + " " + suit[indexOfMax!])
+//            self.sceneText[8] = "High Card of " + vals[max!] + " " + suit[indexOfMax!]
+//        }
+//
+//        self.updateText()
+//    }
+//
+//    func isRoyalFlush(suits: [String], nums: [Int])->Bool{
+//        let mainSuit = suits[0]
+//        for i in suits{
+//            if i != mainSuit{
+//                return false
+//            }
+//        }
+//        let neededForFlush = [12,11,10,9,8]
+//        for i in neededForFlush{
+//            if !nums.contains(i){
+//                return false
+//            }
+//        }
+//        return true
+//    }
+//
+//    func isStraightFlush(suits: [String], nums: [Int])->Bool{
+//        let mainSuit = suits[0]
+//        for i in suits{
+//            if i != mainSuit{
+//                return false
+//            }
+//        }
+//        var numsCopy = nums
+//        numsCopy.sort()
+//        for i in 0..<numsCopy.count - 1{
+//            if numsCopy[i+1] - numsCopy[i] != 1{
+//                return false
+//            }
+//        }
+//        return true
+//    }
+//
+//    func isFourOfAKind(nums: [Int])->Bool{
+//        var numsCopy = nums
+//        numsCopy.sort()
+//        if numsCopy[0] == numsCopy[1] && nums[1] == numsCopy[2]  && numsCopy[2] == numsCopy[3]{
+//            return true
+//        }
+//        else if numsCopy[1] == numsCopy[2] && numsCopy[2] == numsCopy[3]  && numsCopy[3] == numsCopy[4]{
+//            return true
+//        }
+//        return false
+//    }
+//
+//    func isFullHouse(nums: [Int])->Bool{
+//        var numsCopy = nums
+//        numsCopy.sort()
+//        if numsCopy[0] == numsCopy[1] && numsCopy[1] == numsCopy[2]{
+//            if numsCopy[3] == numsCopy[4]{
+//                return true
+//            }
+//        }
+//        else if numsCopy[4] == numsCopy[3] && numsCopy[3] == numsCopy[2]{
+//            if numsCopy[1] == numsCopy[0]{
+//                return true
+//            }
+//        }
+//        return false
+//    }
+//
+//    func isFlush(suits: [String])->Bool{
+//        let mainSuit = suits[0]
+//        for i in suits{
+//            if i != mainSuit{
+//                return false
+//            }
+//        }
+//        return true
+//    }
+//
+//    func isStraight(nums: [Int])->Bool{
+//        var numsCopy = nums
+//        numsCopy.sort()
+//        for i in 0..<numsCopy.count - 1{
+//            if numsCopy[i+1] - numsCopy[i] != 1{
+//                return false
+//            }
+//        }
+//        return true
+//    }
+//
+//    func isThreeOfAKind(nums: [Int])->Bool{
+//        var numsCopy = nums
+//        numsCopy.sort()
+//        if numsCopy[0] == numsCopy[1] && numsCopy[1] == numsCopy[2]{
+//            return true
+//        }
+//        else if numsCopy[1] == numsCopy[2] && numsCopy[2] == numsCopy[3]{
+//            return true
+//        }
+//        else if numsCopy[2] == numsCopy[3] && numsCopy[3] == numsCopy[4]{
+//            return true
+//        }
+//        return false
+//    }
+//
+//    func isTwoPair(nums: [Int])->Bool{
+//        var numsCopy = nums
+//        numsCopy.sort()
+//        if numsCopy[0] ==  numsCopy[1]{
+//            if numsCopy[2] == numsCopy[3]{
+//                return true
+//            }
+//            if numsCopy[3] == numsCopy[4]{
+//                return true
+//            }
+//        }
+//        else if numsCopy[1] == numsCopy[2]{
+//            if numsCopy[3] == numsCopy[3]{
+//                return true
+//            }
+//        }
+//        return false
+//    }
+//
+//    func isPair(nums: [Int])->Bool{
+//        var numsCopy = nums
+//        numsCopy.sort()
+//        for i in 0..<numsCopy.count-1{
+//            if numsCopy[i] == numsCopy[i+1]{
+//                return true
+//            }
+//        }
+//        return false
+//    }
 }

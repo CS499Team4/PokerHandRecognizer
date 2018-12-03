@@ -18,26 +18,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YTH-M8-m97">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="778"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YTH-M8-m97">
+                                <rect key="frame" x="-2" y="-5" width="379" height="822"/>
                             </arscnView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Gp-uF-MrC">
-                                <rect key="frame" x="0.0" y="569" width="375" height="243"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="0.51337756850000005" colorSpace="calibratedRGB"/>
-                                <color key="tintColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="0.90097923801369861" colorSpace="calibratedRGB"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VE3-YQ-lDR">
+                            <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bs6-1J-Eco">
                                 <rect key="frame" x="176" y="395" width="22" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </button>
-                            <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ebc-9w-9UD">
+                            <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ebc-9w-9UD">
                                 <rect key="frame" x="0.0" y="747" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="K99-me-5A5"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem title="Remove Last" width="193.66666666666666" id="xf1-cp-UST">
                                         <connections>
@@ -51,8 +43,32 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Gp-uF-MrC">
+                                <rect key="frame" x="0.0" y="504" width="375" height="243"/>
+                                <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="0.51337756850000005" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="0.90097923801369861" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="243" id="RGp-Bq-hBE"/>
+                                </constraints>
+                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="ebc-9w-9UD" firstAttribute="leading" secondItem="0Gp-uF-MrC" secondAttribute="leading" id="JBM-P2-fSe"/>
+                            <constraint firstItem="YTH-M8-m97" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="-49" id="Ltz-JY-8cU"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="ebc-9w-9UD" secondAttribute="bottom" constant="-13" id="T0g-zM-BRO"/>
+                            <constraint firstAttribute="trailing" secondItem="0Gp-uF-MrC" secondAttribute="trailing" id="VSW-0v-Iud"/>
+                            <constraint firstItem="ebc-9w-9UD" firstAttribute="centerX" secondItem="YTH-M8-m97" secondAttribute="centerX" id="VUR-yA-jbC"/>
+                            <constraint firstItem="ebc-9w-9UD" firstAttribute="top" secondItem="0Gp-uF-MrC" secondAttribute="bottom" id="eyQ-Va-DbG"/>
+                            <constraint firstItem="ebc-9w-9UD" firstAttribute="top" secondItem="0Gp-uF-MrC" secondAttribute="bottom" id="igE-Db-haG"/>
+                            <constraint firstItem="YTH-M8-m97" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-18" id="pIz-N5-a5f"/>
+                            <constraint firstItem="YTH-M8-m97" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="sbI-mX-Iq1"/>
+                            <constraint firstItem="ebc-9w-9UD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="w1N-2R-xbD"/>
+                            <constraint firstItem="0Gp-uF-MrC" firstAttribute="trailing" secondItem="ebc-9w-9UD" secondAttribute="trailing" id="yP4-5C-REE"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
